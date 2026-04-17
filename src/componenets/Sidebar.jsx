@@ -1,119 +1,116 @@
 import React from 'react';
-import { Heading, Type, ImagePlus, FileCode, Plus, Layers, Zap } from 'lucide-react';
+import { Heading, Type, ImagePlus, FileCode, Plus, BookOpen } from 'lucide-react';
 
 const TOOLS = [
   {
     type: 'header',
     label: 'Heading',
     desc: 'H1 – H6 titles',
-    icon: <Heading size={20} />,
-    color: 'from-amber-400 to-orange-500',
-    bg: 'bg-amber-50/80',
-    border: 'border-amber-200/80',
-    hoverBorder: 'hover:border-amber-400',
-    text: 'text-amber-600',
-    glow: 'hover:shadow-amber-100',
+    icon: <Heading size={18} />,
+    accent: '#8b7355',
+    bgClass: 'bg-[#f5f0ea]',
+    borderClass: 'border-[#e8e0d4]',
+    textClass: 'text-[#8b7355]',
   },
   {
     type: 'text',
     label: 'Paragraph',
     desc: 'Rich text content',
-    icon: <Type size={20} />,
-    color: 'from-blue-400 to-indigo-500',
-    bg: 'bg-blue-50/80',
-    border: 'border-blue-200/80',
-    hoverBorder: 'hover:border-blue-400',
-    text: 'text-blue-600',
-    glow: 'hover:shadow-blue-100',
+    icon: <Type size={18} />,
+    accent: '#5a6e7f',
+    bgClass: 'bg-[#f0f3f6]',
+    borderClass: 'border-[#dce3e9]',
+    textClass: 'text-[#5a6e7f]',
   },
   {
     type: 'image',
     label: 'Image',
     desc: 'Drag & drop or URL',
-    icon: <ImagePlus size={20} />,
-    color: 'from-emerald-400 to-teal-500',
-    bg: 'bg-emerald-50/80',
-    border: 'border-emerald-200/80',
-    hoverBorder: 'hover:border-emerald-400',
-    text: 'text-emerald-600',
-    glow: 'hover:shadow-emerald-100',
+    icon: <ImagePlus size={18} />,
+    accent: '#6b8068',
+    bgClass: 'bg-[#f0f4ef]',
+    borderClass: 'border-[#d8e2d6]',
+    textClass: 'text-[#6b8068]',
   },
   {
     type: 'markdown',
     label: 'Markdown',
     desc: 'Write in markdown',
-    icon: <FileCode size={20} />,
-    color: 'from-violet-400 to-purple-500',
-    bg: 'bg-violet-50/80',
-    border: 'border-violet-200/80',
-    hoverBorder: 'hover:border-violet-400',
-    text: 'text-violet-600',
-    glow: 'hover:shadow-violet-100',
+    icon: <FileCode size={18} />,
+    accent: '#7b6b8a',
+    bgClass: 'bg-[#f3f0f6]',
+    borderClass: 'border-[#e0dae6]',
+    textClass: 'text-[#7b6b8a]',
   },
 ];
 
 export default function Sidebar({ onAdd, blockCount }) {
   return (
-    <aside className="w-[280px] min-w-[280px] bg-white border-r border-gray-200/60 h-screen sticky top-0 flex flex-col shadow-sm">
+    <aside className="w-[272px] min-w-[272px] bg-[#faf9f7] border-r border-[#e8e4dd] h-screen sticky top-0 flex flex-col">
       {/* Sidebar Header */}
-      <div className="px-6 pt-6 pb-5 border-b border-gray-100">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-200/50">
-            <Layers size={16} className="text-white" />
+      <div className="px-6 pt-7 pb-5 border-b border-[#e8e4dd]">
+        <div className="flex items-center gap-3 mb-1">
+          <div className="w-8 h-8 rounded-lg bg-[#1a1a1a] flex items-center justify-center">
+            <BookOpen size={14} className="text-[#faf9f7]" />
           </div>
           <div>
-            <h2 className="text-sm font-extrabold text-gray-800 tracking-tight">Components</h2>
-            <p className="text-[10px] text-gray-400 font-medium -mt-0.5">Drag or click to add</p>
+            <h2 className="text-[13px] font-bold text-[#1a1a1a] tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+              Components
+            </h2>
           </div>
         </div>
+        <p className="text-[11px] text-[#a8a29e] font-normal mt-2 ml-11">Click to add to canvas</p>
         {blockCount > 0 && (
-          <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100/60" style={{ animation: 'fadeInUp 0.3s ease-out' }}>
-            <Zap size={12} className="text-indigo-500" />
-            <span className="text-[11px] font-semibold text-indigo-600">
-              {blockCount} {blockCount === 1 ? 'block' : 'blocks'} on canvas
+          <div className="flex items-center gap-2 mt-3 ml-11">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#6b8068]" />
+            <span className="text-[11px] font-medium text-[#6b8068]">
+              {blockCount} {blockCount === 1 ? 'block' : 'blocks'} active
             </span>
           </div>
         )}
       </div>
 
       {/* Tools */}
-      <div className="flex-1 overflow-y-auto px-5 py-5 space-y-3">
+      <div className="flex-1 overflow-y-auto px-4 py-5 space-y-2">
         {TOOLS.map((tool, index) => (
           <button
             key={tool.type}
             onClick={() => onAdd(tool.type)}
-            className={`w-full flex items-center gap-4 p-4 rounded-2xl border ${tool.border} ${tool.bg} ${tool.hoverBorder} ${tool.glow} hover:shadow-lg transition-all duration-200 group text-left active:scale-[0.97]`}
-            style={{ animation: `sidebarItemIn 0.3s ease-out ${index * 0.06}s both` }}
+            className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl border ${tool.borderClass} ${tool.bgClass} hover:shadow-md transition-all duration-250 group text-left active:scale-[0.98]`}
+            style={{ animation: `slideIn 0.35s ease-out ${index * 0.06}s both` }}
           >
-            <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center text-white shadow-sm group-hover:scale-110 group-hover:shadow-md group-hover:rotate-[-3deg] transition-all duration-200`}>
+            <div
+              className="w-9 h-9 rounded-lg flex items-center justify-center text-white transition-transform duration-250 group-hover:scale-105"
+              style={{ backgroundColor: tool.accent }}
+            >
               {tool.icon}
             </div>
             <div className="flex-1 min-w-0">
-              <div className={`font-bold text-sm ${tool.text}`}>{tool.label}</div>
-              <div className="text-[11px] text-gray-400 mt-0.5">{tool.desc}</div>
+              <div className={`font-semibold text-[13px] ${tool.textClass}`}>{tool.label}</div>
+              <div className="text-[11px] text-[#a8a29e] mt-0.5">{tool.desc}</div>
             </div>
-            <div className="w-7 h-7 rounded-lg bg-white/70 border border-gray-200/50 flex items-center justify-center group-hover:bg-white group-hover:shadow-sm group-hover:scale-110 transition-all">
-              <Plus size={14} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
+            <div className="w-6 h-6 rounded-md border border-[#e0dcd5] bg-white/80 flex items-center justify-center group-hover:border-[#c5bfb5] transition-all">
+              <Plus size={12} className="text-[#c5bfb5] group-hover:text-[#8b8580] transition-colors" />
             </div>
           </button>
         ))}
       </div>
 
       {/* Sidebar Footer */}
-      <div className="px-5 pb-5 pt-3 border-t border-gray-100">
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100/80 rounded-xl p-4 text-center">
-          <p className="text-[11px] text-gray-400 font-medium leading-relaxed">
-            Drag blocks to reorder · Click to edit
+      <div className="px-4 pb-5 pt-3 border-t border-[#e8e4dd]">
+        <div className="rounded-lg px-4 py-3 bg-[#f5f3ef] text-center">
+          <p className="text-[10px] text-[#b5b0a8] font-medium leading-relaxed tracking-wide uppercase">
+            Drag to reorder · Click to edit
           </p>
-          <p className="text-[10px] text-gray-300 mt-1.5">
-            ✨ Auto-saved to local storage
+          <p className="text-[10px] text-[#c5c0b8] mt-1">
+            Auto-saved locally
           </p>
         </div>
       </div>
 
       <style>{`
-        @keyframes sidebarItemIn {
-          from { opacity: 0; transform: translateX(-8px); }
+        @keyframes slideIn {
+          from { opacity: 0; transform: translateX(-6px); }
           to   { opacity: 1; transform: translateX(0); }
         }
       `}</style>

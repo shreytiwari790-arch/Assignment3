@@ -1,34 +1,24 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { ChevronDown, ImageOff, Upload, Image as ImageIcon, Link2, Type, X } from 'lucide-react';
+import { ChevronDown, Upload, Image as ImageIcon, Link2, Type, X } from 'lucide-react';
 
 // Simple markdown parser (covers bold, italic, code, headings, lists, blockquotes, links)
 function parseMarkdown(md) {
   if (!md) return '';
   let html = md
-    // Code blocks
-    .replace(/```([\s\S]*?)```/g, '<pre class="bg-gray-900 text-green-400 p-4 rounded-xl my-3 text-sm overflow-x-auto font-mono">$1</pre>')
-    // Inline code
-    .replace(/`([^`]+)`/g, '<code class="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>')
-    // Headings
-    .replace(/^### (.+)$/gm, '<h3 class="text-lg font-bold text-gray-800 mt-4 mb-2">$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-gray-800 mt-4 mb-2">$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-bold text-gray-800 mt-4 mb-2">$1</h1>')
-    // Bold & italic
+    .replace(/```([\s\S]*?)```/g, '<pre style="background:#2d2a26;color:#c8b89a;padding:16px;border-radius:8px;margin:12px 0;font-size:13px;overflow-x:auto;font-family:JetBrains Mono,monospace">$1</pre>')
+    .replace(/`([^`]+)`/g, '<code style="background:#f5f0ea;color:#8b7355;padding:2px 6px;border-radius:4px;font-size:13px;font-family:JetBrains Mono,monospace">$1</code>')
+    .replace(/^### (.+)$/gm, '<h3 style="font-size:18px;font-weight:700;color:#2d2a26;margin:16px 0 8px">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 style="font-size:20px;font-weight:700;color:#2d2a26;margin:16px 0 8px">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1 style="font-size:24px;font-weight:700;color:#2d2a26;margin:16px 0 8px">$1</h1>')
     .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold">$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>')
-    // Blockquote
-    .replace(/^> (.+)$/gm, '<blockquote class="border-l-4 border-indigo-300 pl-4 py-1 my-2 italic text-gray-500">$1</blockquote>')
-    // Unordered list
-    .replace(/^- (.+)$/gm, '<li class="ml-4 list-disc text-gray-600">$1</li>')
-    // Links
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" class="text-indigo-500 underline" target="_blank" rel="noopener noreferrer">$1</a>')
-    // Line breaks
+    .replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:700">$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em style="font-style:italic">$1</em>')
+    .replace(/^> (.+)$/gm, '<blockquote style="border-left:3px solid #d0ccc4;padding-left:16px;padding-top:4px;padding-bottom:4px;margin:8px 0;font-style:italic;color:#8b8580">$1</blockquote>')
+    .replace(/^- (.+)$/gm, '<li style="margin-left:16px;list-style:disc;color:#5a5550">$1</li>')
+    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" style="color:#8b7355;text-decoration:underline" target="_blank" rel="noopener noreferrer">$1</a>')
     .replace(/\n\n/g, '<br/><br/>')
     .replace(/\n/g, '<br/>');
-
-  // Wrap consecutive <li> in <ul>
-  html = html.replace(/((?:<li[^>]*>.*?<\/li>\s*(?:<br\s*\/?>)?)+)/g, '<ul class="my-2 space-y-1">$1</ul>');
+  html = html.replace(/((?:<li[^>]*>.*?<\/li>\s*(?:<br\s*\/?>)?)+)/g, '<ul style="margin:8px 0">$1</ul>');
   return html;
 }
 
@@ -47,18 +37,36 @@ function HeaderBlock({ block, updateBlock }) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-3">
         <div className="relative">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl hover:bg-amber-100 hover:border-amber-300 transition-all duration-200 shadow-sm"
+            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-lg transition-all duration-200"
+            style={{
+              color: '#8b7355',
+              background: '#f5f0ea',
+              border: '1px solid #e8e0d4',
+            }}
           >
-            {level.value.toUpperCase()} <ChevronDown size={12} className={`transition-transform duration-200 ${showMenu ? 'rotate-180' : ''}`} />
+            {level.value.toUpperCase()}
+            <ChevronDown
+              size={11}
+              className="transition-transform duration-200"
+              style={{ transform: showMenu ? 'rotate(180deg)' : 'rotate(0)' }}
+            />
           </button>
           {showMenu && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
-              <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200/80 rounded-2xl shadow-2xl py-2 z-50 min-w-[180px] backdrop-blur-xl" style={{ animation: 'dropdownIn 0.2s ease-out' }}>
+              <div
+                className="absolute top-full left-0 mt-1.5 py-1.5 z-50 min-w-[170px] rounded-lg"
+                style={{
+                  background: '#fff',
+                  border: '1px solid #e8e4dd',
+                  boxShadow: '0 8px 30px rgba(0,0,0,0.08)',
+                  animation: 'dropIn 0.2s ease-out',
+                }}
+              >
                 {HEADER_LEVELS.map((h) => (
                   <button
                     key={h.value}
@@ -66,15 +74,22 @@ function HeaderBlock({ block, updateBlock }) {
                       updateBlock(block.id, { level: h.value });
                       setShowMenu(false);
                     }}
-                    className={`w-full text-left px-4 py-2.5 text-sm hover:bg-indigo-50 transition-all duration-150 flex items-center gap-3 ${
-                      h.value === block.content.level ? 'text-indigo-600 font-semibold bg-indigo-50/70' : 'text-gray-600'
-                    }`}
+                    className="w-full text-left px-3 py-2 text-[13px] flex items-center gap-2.5 transition-colors duration-150"
+                    style={{
+                      color: h.value === block.content.level ? '#8b7355' : '#6b6660',
+                      fontWeight: h.value === block.content.level ? 600 : 400,
+                      background: h.value === block.content.level ? '#f5f0ea' : 'transparent',
+                    }}
+                    onMouseEnter={(e) => { if (h.value !== block.content.level) e.currentTarget.style.background = '#faf8f5'; }}
+                    onMouseLeave={(e) => { if (h.value !== block.content.level) e.currentTarget.style.background = 'transparent'; }}
                   >
-                    <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black tracking-wider ${
-                      h.value === block.content.level
-                        ? 'bg-indigo-100 text-indigo-600'
-                        : 'bg-gray-100 text-gray-400'
-                    }`}>
+                    <span
+                      className="w-7 h-7 rounded flex items-center justify-center text-[9px] font-black tracking-wider"
+                      style={{
+                        background: h.value === block.content.level ? '#8b7355' : '#f0ece6',
+                        color: h.value === block.content.level ? '#fff' : '#b5b0a8',
+                      }}
+                    >
                       {h.preview}
                     </span>
                     {h.label}
@@ -86,7 +101,8 @@ function HeaderBlock({ block, updateBlock }) {
         </div>
       </div>
       <input
-        className={`w-full bg-transparent outline-none font-extrabold text-gray-900 placeholder-gray-300 ${level.size} transition-all duration-200 focus:placeholder-gray-400`}
+        className={`w-full bg-transparent outline-none font-bold placeholder-[#d0ccc4] ${level.size} transition-colors duration-200`}
+        style={{ color: '#2d2a26', fontFamily: "'Playfair Display', serif" }}
         value={block.content.text}
         placeholder="Type your heading..."
         onChange={(e) => updateBlock(block.id, { text: e.target.value })}
@@ -99,17 +115,21 @@ function TextBlock({ block, updateBlock }) {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <div className={`relative transition-all duration-200 rounded-xl ${isFocused ? 'ring-2 ring-blue-100' : ''}`}>
+    <div
+      className="relative rounded-lg transition-all duration-200"
+      style={{ outline: isFocused ? '2px solid rgba(90,110,127,0.15)' : 'none', outlineOffset: '2px' }}
+    >
       <textarea
-        className="w-full bg-transparent outline-none text-gray-600 leading-relaxed text-base min-h-[140px] resize-none placeholder-gray-300 p-1 transition-colors duration-200 focus:text-gray-700"
+        className="w-full bg-transparent outline-none leading-relaxed text-[15px] min-h-[120px] resize-none p-1 transition-colors duration-200"
+        style={{ color: '#5a5550', '::placeholder': { color: '#d0ccc4' } }}
         value={block.content.text}
         placeholder="Write your paragraph here..."
         onChange={(e) => updateBlock(block.id, { text: e.target.value })}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
-      <div className="flex items-center justify-end mt-1 opacity-60">
-        <span className="text-[10px] text-gray-400 font-medium">
+      <div className="flex items-center justify-end mt-1">
+        <span className="text-[10px] font-medium" style={{ color: '#d0ccc4' }}>
           {(block.content.text || '').length} characters
         </span>
       </div>
@@ -164,44 +184,46 @@ function ImageBlock({ block, updateBlock }) {
   }, [block.id, updateBlock]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Image Preview / Drop Zone */}
       <div
-        className={`relative rounded-2xl overflow-hidden transition-all duration-300 ${
-          isDragOver
-            ? 'ring-2 ring-emerald-400 ring-offset-2 shadow-lg shadow-emerald-100'
-            : 'shadow-sm'
-        }`}
+        className="relative rounded-xl overflow-hidden transition-all duration-300"
+        style={{
+          outline: isDragOver ? '2px solid #6b8068' : 'none',
+          outlineOffset: isDragOver ? '2px' : '0',
+        }}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
         {imgError || !block.content.url ? (
           <div
-            className={`w-full min-h-[220px] flex flex-col items-center justify-center gap-4 border-2 border-dashed rounded-2xl transition-all duration-300 cursor-pointer ${
-              isDragOver
-                ? 'border-emerald-400 bg-emerald-50/60'
-                : 'border-gray-200 bg-gradient-to-b from-gray-50 to-gray-100/50 hover:border-emerald-300 hover:bg-emerald-50/30'
-            }`}
+            className="w-full min-h-[200px] flex flex-col items-center justify-center gap-3 rounded-xl cursor-pointer transition-all duration-300"
+            style={{
+              border: `2px dashed ${isDragOver ? '#6b8068' : '#ddd8d0'}`,
+              background: isDragOver ? 'rgba(107,128,104,0.06)' : '#faf8f5',
+            }}
             onClick={() => fileInputRef.current?.click()}
           >
-            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 ${
-              isDragOver
-                ? 'bg-emerald-100 scale-110'
-                : 'bg-gray-100'
-            }`}>
+            <div
+              className="w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300"
+              style={{
+                background: isDragOver ? 'rgba(107,128,104,0.12)' : '#f0ece6',
+                transform: isDragOver ? 'scale(1.08)' : 'scale(1)',
+              }}
+            >
               {isDragOver ? (
-                <Upload size={28} className="text-emerald-500 animate-bounce" />
+                <Upload size={24} style={{ color: '#6b8068' }} />
               ) : (
-                <ImageIcon size={28} className="text-gray-400" />
+                <ImageIcon size={24} style={{ color: '#b5b0a8' }} />
               )}
             </div>
             <div className="text-center px-4">
-              <p className={`text-sm font-semibold transition-colors duration-200 ${isDragOver ? 'text-emerald-600' : 'text-gray-500'}`}>
-                {isDragOver ? 'Drop your image here' : 'Drag & drop an image here'}
+              <p className="text-[13px] font-medium" style={{ color: isDragOver ? '#6b8068' : '#8b8580' }}>
+                {isDragOver ? 'Drop your image here' : 'Drag & drop an image'}
               </p>
-              <p className="text-xs text-gray-400 mt-1">
-                or <span className="text-emerald-500 font-medium hover:underline">click to browse</span> · PNG, JPG, GIF, SVG
+              <p className="text-[11px] mt-1" style={{ color: '#c0bbb3' }}>
+                or <span style={{ color: '#6b8068', fontWeight: 500 }}>click to browse</span> · PNG, JPG, GIF, SVG
               </p>
             </div>
           </div>
@@ -210,29 +232,30 @@ function ImageBlock({ block, updateBlock }) {
             <img
               src={block.content.url}
               alt={block.content.alt || 'Block image'}
-              className="w-full h-auto max-h-[400px] object-cover rounded-2xl"
+              className="w-full h-auto max-h-[380px] object-cover rounded-xl"
               onError={() => setImgError(true)}
               onLoad={() => setImgError(false)}
             />
-            {/* Overlay actions */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 rounded-2xl flex items-end justify-between p-4">
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#2d2a26]/50 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 rounded-xl flex items-end justify-between p-3">
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-2 px-3 py-2 bg-white/90 backdrop-blur-sm rounded-xl text-xs font-semibold text-gray-700 hover:bg-white transition-all shadow-lg"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all"
+                style={{ background: 'rgba(255,255,255,0.92)', color: '#2d2a26' }}
               >
-                <Upload size={13} /> Replace
+                <Upload size={12} /> Replace
               </button>
               <button
                 onClick={clearImage}
-                className="w-8 h-8 flex items-center justify-center bg-red-500/90 backdrop-blur-sm rounded-xl text-white hover:bg-red-600 transition-all shadow-lg"
+                className="w-7 h-7 flex items-center justify-center rounded-lg transition-all"
+                style={{ background: 'rgba(192,86,75,0.9)', color: '#fff' }}
               >
-                <X size={14} />
+                <X size={13} />
               </button>
             </div>
           </div>
         )}
 
-        {/* Hidden file input */}
         <input
           ref={fileInputRef}
           type="file"
@@ -242,38 +265,48 @@ function ImageBlock({ block, updateBlock }) {
         />
       </div>
 
-      {/* URL / Details Tabs */}
-      <div className="space-y-3">
-        <div className="flex gap-1 bg-gray-50 p-1 rounded-xl w-fit">
+      {/* Tabs & Inputs */}
+      <div className="space-y-2.5">
+        <div className="flex gap-0.5 p-0.5 rounded-lg w-fit" style={{ background: '#f0ece6' }}>
           <button
             onClick={() => setActiveTab('url')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-              activeTab === 'url'
-                ? 'bg-white text-emerald-600 shadow-sm'
-                : 'text-gray-400 hover:text-gray-600'
-            }`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all duration-200"
+            style={{
+              background: activeTab === 'url' ? '#fff' : 'transparent',
+              color: activeTab === 'url' ? '#6b8068' : '#b5b0a8',
+              boxShadow: activeTab === 'url' ? '0 1px 3px rgba(0,0,0,0.06)' : 'none',
+            }}
           >
-            <Link2 size={12} /> URL
+            <Link2 size={11} /> URL
           </button>
           <button
             onClick={() => setActiveTab('details')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-              activeTab === 'details'
-                ? 'bg-white text-emerald-600 shadow-sm'
-                : 'text-gray-400 hover:text-gray-600'
-            }`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all duration-200"
+            style={{
+              background: activeTab === 'details' ? '#fff' : 'transparent',
+              color: activeTab === 'details' ? '#6b8068' : '#b5b0a8',
+              boxShadow: activeTab === 'details' ? '0 1px 3px rgba(0,0,0,0.06)' : 'none',
+            }}
           >
-            <Type size={12} /> Details
+            <Type size={11} /> Details
           </button>
         </div>
 
         {activeTab === 'url' ? (
-          <div className="flex items-center gap-3">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-500 bg-emerald-50 border border-emerald-100 px-2.5 py-1.5 rounded-lg whitespace-nowrap">URL</span>
+          <div className="flex items-center gap-2.5">
+            <span
+              className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded whitespace-nowrap"
+              style={{ color: '#6b8068', background: '#eef3ed', border: '1px solid #d8e2d6' }}
+            >
+              URL
+            </span>
             <input
-              className="flex-1 bg-gray-50 rounded-xl px-4 py-2.5 text-sm outline-none border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all placeholder-gray-300"
+              className="flex-1 rounded-lg px-3.5 py-2 text-[13px] outline-none transition-all"
+              style={{ background: '#faf8f5', border: '1px solid #e8e4dd', color: '#2d2a26' }}
               value={block.content.url}
               placeholder="https://example.com/image.jpg"
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#6b8068'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#e8e4dd'; }}
               onChange={(e) => {
                 setImgError(false);
                 updateBlock(block.id, { url: e.target.value });
@@ -281,35 +314,44 @@ function ImageBlock({ block, updateBlock }) {
             />
           </div>
         ) : (
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 bg-gray-100 border border-gray-200/50 px-2.5 py-1.5 rounded-lg whitespace-nowrap">Alt</span>
+          <div className="space-y-2.5">
+            <div className="flex items-center gap-2.5">
+              <span
+                className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded whitespace-nowrap"
+                style={{ color: '#b5b0a8', background: '#f0ece6', border: '1px solid #e8e4dd' }}
+              >
+                Alt
+              </span>
               <input
-                className="flex-1 bg-gray-50 rounded-xl px-4 py-2.5 text-sm outline-none border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all placeholder-gray-300"
+                className="flex-1 rounded-lg px-3.5 py-2 text-[13px] outline-none transition-all"
+                style={{ background: '#faf8f5', border: '1px solid #e8e4dd', color: '#2d2a26' }}
                 value={block.content.alt || ''}
                 placeholder="Image description"
+                onFocus={(e) => { e.currentTarget.style.borderColor = '#6b8068'; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = '#e8e4dd'; }}
                 onChange={(e) => updateBlock(block.id, { alt: e.target.value })}
               />
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 bg-gray-100 border border-gray-200/50 px-2.5 py-1.5 rounded-lg whitespace-nowrap">Caption</span>
+            <div className="flex items-center gap-2.5">
+              <span
+                className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded whitespace-nowrap"
+                style={{ color: '#b5b0a8', background: '#f0ece6', border: '1px solid #e8e4dd' }}
+              >
+                Caption
+              </span>
               <input
-                className="flex-1 bg-gray-50 rounded-xl px-4 py-2.5 text-sm outline-none border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all placeholder-gray-300"
+                className="flex-1 rounded-lg px-3.5 py-2 text-[13px] outline-none transition-all"
+                style={{ background: '#faf8f5', border: '1px solid #e8e4dd', color: '#2d2a26' }}
                 value={block.content.caption || ''}
                 placeholder="Optional caption"
+                onFocus={(e) => { e.currentTarget.style.borderColor = '#6b8068'; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = '#e8e4dd'; }}
                 onChange={(e) => updateBlock(block.id, { caption: e.target.value })}
               />
             </div>
           </div>
         )}
       </div>
-
-      <style>{`
-        @keyframes dropdownIn {
-          from { opacity: 0; transform: translateY(-4px) scale(0.97); }
-          to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-      `}</style>
     </div>
   );
 }
@@ -320,51 +362,71 @@ function MarkdownBlock({ block, updateBlock }) {
 
   return (
     <div>
-      <div className="flex gap-1 mb-5 bg-gray-100/80 p-1 rounded-xl w-fit">
+      {/* Tab Switcher */}
+      <div className="flex gap-0.5 mb-4 p-0.5 rounded-lg w-fit" style={{ background: '#f0ece6' }}>
         <button
           onClick={() => setTab('write')}
-          className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-            tab === 'write'
-              ? 'bg-white text-violet-700 shadow-sm'
-              : 'text-gray-400 hover:text-gray-600'
-          }`}
+          className="px-4 py-1.5 rounded-md text-[12px] font-semibold transition-all duration-200"
+          style={{
+            background: tab === 'write' ? '#fff' : 'transparent',
+            color: tab === 'write' ? '#7b6b8a' : '#b5b0a8',
+            boxShadow: tab === 'write' ? '0 1px 3px rgba(0,0,0,0.06)' : 'none',
+          }}
         >
-          ✍️ Write
+          Write
         </button>
         <button
           onClick={() => setTab('preview')}
-          className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-            tab === 'preview'
-              ? 'bg-white text-violet-700 shadow-sm'
-              : 'text-gray-400 hover:text-gray-600'
-          }`}
+          className="px-4 py-1.5 rounded-md text-[12px] font-semibold transition-all duration-200"
+          style={{
+            background: tab === 'preview' ? '#fff' : 'transparent',
+            color: tab === 'preview' ? '#7b6b8a' : '#b5b0a8',
+            boxShadow: tab === 'preview' ? '0 1px 3px rgba(0,0,0,0.06)' : 'none',
+          }}
         >
-          👁️ Preview
+          Preview
         </button>
       </div>
 
       {tab === 'write' ? (
-        <div className={`relative rounded-xl transition-all duration-200 ${isFocused ? 'ring-2 ring-violet-100' : ''}`}>
+        <div
+          className="relative rounded-lg transition-all duration-200"
+          style={{
+            outline: isFocused ? '2px solid rgba(123,107,138,0.15)' : 'none',
+            outlineOffset: '2px',
+          }}
+        >
           <textarea
-            className="w-full bg-gray-50 rounded-xl p-5 outline-none font-mono text-sm text-gray-700 min-h-[220px] resize-none border border-gray-200 focus:border-violet-400 transition-all leading-relaxed"
+            className="w-full rounded-lg p-4 outline-none text-[13px] min-h-[200px] resize-none transition-all leading-relaxed"
+            style={{
+              background: '#faf8f5',
+              border: '1px solid #e8e4dd',
+              color: '#3d3a36',
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
             value={block.content.text}
             placeholder="Write markdown here..."
             onChange={(e) => updateBlock(block.id, { text: e.target.value })}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
           />
-          <div className="flex items-center justify-between mt-2 px-1">
-            <span className="text-[10px] text-gray-400 font-medium">
+          <div className="flex items-center justify-between mt-1.5 px-1">
+            <span className="text-[10px] font-medium" style={{ color: '#d0ccc4' }}>
               Supports **bold**, *italic*, `code`, # headings, - lists
             </span>
-            <span className="text-[10px] text-gray-400 font-medium">
+            <span className="text-[10px] font-medium" style={{ color: '#d0ccc4' }}>
               {(block.content.text || '').split(/\s+/).filter(Boolean).length} words
             </span>
           </div>
         </div>
       ) : (
         <div
-          className="prose prose-sm max-w-none bg-gray-50 rounded-xl p-5 min-h-[220px] border border-gray-200 text-gray-700"
+          className="max-w-none rounded-lg p-5 min-h-[200px] text-[14px] leading-relaxed"
+          style={{
+            background: '#faf8f5',
+            border: '1px solid #e8e4dd',
+            color: '#3d3a36',
+          }}
           dangerouslySetInnerHTML={{ __html: parseMarkdown(block.content.text) }}
         />
       )}
@@ -383,6 +445,6 @@ export default function BlockRenderer({ block, updateBlock }) {
     case 'markdown':
       return <MarkdownBlock block={block} updateBlock={updateBlock} />;
     default:
-      return <p className="text-red-400">Unknown block type: {block.type}</p>;
+      return <p style={{ color: '#c0564b' }}>Unknown block type: {block.type}</p>;
   }
 }

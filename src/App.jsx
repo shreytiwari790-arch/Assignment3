@@ -4,7 +4,7 @@ import Sidebar from './componenets/Sidebar';
 import Canvas from './componenets/Canvas';
 import PreviewModal from './componenets/PreviewModal';
 import { usePersistentState } from './hooks/usePersistentState';
-import { Layers, Eye, RotateCcw, Sparkles } from 'lucide-react';
+import { Eye, RotateCcw, PenTool } from 'lucide-react';
 
 const BLOCK_DEFAULTS = {
   header: { text: 'New Section Heading', level: 'h2' },
@@ -60,47 +60,52 @@ export default function App() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-slate-50 to-gray-100">
+    <div className="flex min-h-screen bg-[#f8f6f3]">
       <Sidebar onAdd={addBlock} blockCount={blocks.length} />
 
       <main className="flex-1 overflow-y-auto">
         {/* Top Bar */}
-        <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-200/60 shadow-sm">
-          <div className="max-w-4xl mx-auto px-8 lg:px-12 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-3.5">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-200/50">
-                  <Layers size={18} className="text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-sm" style={{ animation: 'pulse 2s infinite' }}>
-                  <Sparkles size={8} className="text-white" />
-                </div>
+        <div className="sticky top-0 z-40 bg-[#faf9f7]/90 backdrop-blur-lg border-b border-[#e8e4dd]">
+          <div className=" mx-auto px-8 lg:px-12 py-4 flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <div className="w-full h-9 rounded-lg bg-[#2d2a26] flex items-center justify-center">
+                <PenTool size={15} className="text-[#f8f6f3]" />
               </div>
               <div>
-                <h1 className="text-lg font-extrabold text-gray-900 tracking-tight">BuilderX</h1>
-                <p className="text-[11px] text-gray-400 -mt-0.5 font-medium">Personal Content Builder</p>
+                <h1
+                  className="text-[17px] font-bold text-[#2d2a26] tracking-tight"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  BuilderX
+                </h1>
+                <p className="text-[10px] text-[#b5b0a8] font-medium -mt-0.5 tracking-wide uppercase">
+                  Content Builder
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+
+            {/* Actions */}
+            <div className="flex items-center gap-2.5">
               {blocks.length > 0 && (
-                <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 px-3.5 py-2 rounded-xl border border-indigo-100">
+                <span className="text-[11px] font-semibold text-[#8b7355] bg-[#f5f0ea] px-3 py-1.5 rounded-lg border border-[#e8e0d4]">
                   {blocks.length} {blocks.length === 1 ? 'block' : 'blocks'}
                 </span>
               )}
               <button
                 onClick={clearAll}
                 disabled={blocks.length === 0}
-                className="p-2.5 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-400 disabled:hover:bg-transparent disabled:hover:border-transparent"
+                className="p-2 rounded-lg text-[#b5b0a8] hover:text-[#c0564b] hover:bg-[#fdf0ee] border border-transparent hover:border-[#f0cdc8] transition-all duration-200 disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:text-[#b5b0a8] disabled:hover:bg-transparent disabled:hover:border-transparent"
                 title="Clear all blocks"
               >
-                <RotateCcw size={16} />
+                <RotateCcw size={15} />
               </button>
               <button
                 onClick={() => setShowPreview(true)}
                 disabled={blocks.length === 0}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-semibold shadow-lg shadow-indigo-200/50 hover:shadow-xl hover:shadow-indigo-300/50 hover:scale-[1.02] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:scale-100"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#2d2a26] text-[#f8f6f3] text-[13px] font-semibold hover:bg-[#3d3a36] transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-[#2d2a26]"
               >
-                <Eye size={15} />
+                <Eye size={14} />
                 Preview
               </button>
             </div>
@@ -108,7 +113,7 @@ export default function App() {
         </div>
 
         {/* Canvas Area */}
-        <div className="max-w-4xl mx-auto px-8 lg:px-12 py-10">
+        <div className=" mx-auto px-8 lg:px-12 py-10">
           <Canvas
             blocks={blocks}
             onDragEnd={onDragEnd}
